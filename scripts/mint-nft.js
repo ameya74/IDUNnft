@@ -12,14 +12,17 @@ const ContractAddress = "0xb5db0f2e712A0027e6E6144B954573b613188583";
 const NFTContract = new web3.eth.Contract(contract.abi, ContractAddress);
 
 async function mintNFT(tokenURI) {
-    const nonce = await web3.eth.getTransactionCount(PUBLIC_KEY, 'latest') // To get the Latest Nonce
-
+    console.log("Transaction started for: " + i);
+    // To get the Latest Nonce
+    const nonce = await web3.eth.getTransactionCount(PUBLIC_KEY, "latest")
+    console.log("Nonce: " + nonce);
     //The Transaction made
-
     const TX = {
         from: PUBLIC_KEY,
+        to: ContractAddress,
         nonce: nonce,
-        gas: 500000,
+        gas: 900000,
+        maxPriorityGasPrice: 1999999987,
         data: NFTContract.methods.mintNFT(PUBLIC_KEY, tokenURI).encodeABI()
     };
     console.log(TX.data);
