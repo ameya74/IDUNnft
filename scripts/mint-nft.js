@@ -8,7 +8,7 @@ const { createAlchemyWeb3 } = require('@alch/alchemy-web3')
 const web3 = createAlchemyWeb3(API_URL);
 
 const contract = require('../artifacts/contracts/NFT.sol/IdeaUsher.json');
-const ContractAddress = "0xeb9DD5A4BFb209f8B15b16D6d65E25143e91c18d";
+const ContractAddress = "0xb5db0f2e712A0027e6E6144B954573b613188583";
 const NFTContract = new web3.eth.Contract(contract.abi, ContractAddress);
 
 async function mintNFT(tokenURI) {
@@ -22,6 +22,7 @@ async function mintNFT(tokenURI) {
         gas: 500000,
         data: NFTContract.methods.mintNFT(PUBLIC_KEY, tokenURI).encodeABI()
     };
+    console.log(TX.data);
 
     const SignPromise = web3.eth.accounts.signTransaction(TX, PRIVATE_KEY)
     SignPromise.then((signedTX) => {

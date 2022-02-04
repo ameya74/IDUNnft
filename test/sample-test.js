@@ -9,10 +9,18 @@ describe("NFT", function () {
 
     await nft.deployed();
 
-    const ItemId = await nft.mintNFT(addr1, "https://www.mytokenlocation.com");
+    //Test to check the owner of the contract   
+    expect(await nft.owner()).to.equal(owner.address);
+  
 
+    //Test to check the mintNFT function
+    const tokenURI = "https://gateway.pinata.cloud/ipfs/QmY6FPqCf1r6kqPL83Fw25ayyCugiH95qb8KFNT4PEH9qY";
+    const tx = await nft.mintNFT(addr1.address, tokenURI);
+    const receipt = await tx.wait();
+    const itemId = receipt.events.NFTMinted.returnValues.id;
 
-    expect(ItemId.to.equal("1"));
+    expect(itemId).to.equal(1);
+
 
   });
 });
