@@ -3,6 +3,7 @@ node_modules
 coverage
 coverage.json
 typechain
+nft-metadata copy.json
 
 #Hardhat files
 cache

@@ -11,8 +11,7 @@ const contract = require('../artifacts/contracts/NFT.sol/IdeaUsher.json');
 const ContractAddress = "0xb5db0f2e712A0027e6E6144B954573b613188583";
 const NFTContract = new web3.eth.Contract(contract.abi, ContractAddress);
 
-async function mintNFT(tokenURI) {
-    console.log("Transaction started for: " + i);
+async function mintNFT(tokenURI) {    
     // To get the Latest Nonce
     const nonce = await web3.eth.getTransactionCount(PUBLIC_KEY, "latest")
     console.log("Nonce: " + nonce);
