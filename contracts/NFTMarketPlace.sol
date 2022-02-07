@@ -23,7 +23,7 @@ contract NFTMarket is ReentrancyGuard {
         address nftContract;
         uint256 nftTokenId;
         address payable seller;
-        address payable buyer;
+        address payable owner;
         uint256 price;
         bool isSold;
     }
@@ -31,7 +31,7 @@ contract NFTMarket is ReentrancyGuard {
     mapping(uint256 => NFTItem) private _nftItems;
 
     //TODO: Add the event for the NFT item created
-    event NFTItemCreated(uint256 indexed Itemid, address indexed nftContract, uint256 indexed nftTokenId, address seller,address buyer ,uint256 price, bool isSold);
+    event NFTItemCreated(uint256 indexed Itemid, address indexed nftContract, uint256 indexed nftTokenId, address seller,address owner ,uint256 price, bool isSold);
 
     uint256 listingPrice = 0.01 ether;
 
@@ -58,7 +58,7 @@ contract NFTMarket is ReentrancyGuard {
             price,
             false
         );
-        IERC721(nftContract).transferFrom(msg.sender, address(this), nftTokenId);
+        IERC721(nftContract).safeTransferFrom(msg.sender, address(this), nftTokenId);
 
         //emit an event for the item created
         emit NFTItemCreated(itemId, nftContract, nftTokenId, msg.sender, address(0), price, false);
@@ -75,7 +75,7 @@ contract NFTMarket is ReentrancyGuard {
 
         IERC721(nftContract).transferFrom(address(this), msg.sender, nftTokenId);
 
-        _nftItems[itemId].buyer = payable(msg.sender);
+        _nftItems[itemId].owner = payable(msg.sender);
         _nftItems[itemId].isSold = true;
 
         _nftItemsSold.increment();        
@@ -88,13 +88,62 @@ contract NFTMarket is ReentrancyGuard {
 
         NFTItem[] memory unsoldItems = new NFTItem[](unsoldItemCount);
         
-        for (uint256 itemId = 0; itemId < itemCount; itemId++) {
-            if (!_nftItems[itemId].isSold) {        //TODO: Add the condition for the item to be sold//
-                unsoldItems[currentIndex] = itemId;
+        for (uint256 index = 0; index < itemCount; index++) {
+            if (_nftItems[index+1].owner == msg.sender) {        
+                uint CurrentID = index +1;
+                NFTItem memory Currentitem = _nftItems[CurrentID];
+                unsoldItems[currentIndex] = Currentitem;
                 currentIndex++;
             }
         }
         return unsoldItems;
+    }
+
+    /// @notice Returns only items that a user has bought
+    function fetchUserNFT () public view returns(NFTItem[] memory) {
+        uint TotalItemCount = _nftIdCounter.current();
+        uint itemCount = 0;
+        uint currentIndex = 0;
+
+        for (uint256 index = 0; index < TotalItemCount ; index++) {
+            if (_nftItems[index+1].owner == msg.sender) {
+                itemCount++;
+            }
+        }
+        NFTItem[] memory userNFT = new NFTItem[](itemCount);
+
+        for (uint256 index = 0; index < TotalItemCount; index++) {
+            if (_nftItems[index+1].owner == msg.sender) {
+                uint CurrentID = index +1;
+                NFTItem memory Currentitem = _nftItems[CurrentID];
+                userNFT[currentIndex] = Currentitem;
+                currentIndex++;
+            }
+        }
+        return userNFT;    
+    }
+    ///@notice Returns all items that are user has created
+    function getUserItems() public view returns(NFTItem[] memory) {
+        uint TotalItemCount = _nftIdCounter.current();
+        uint itemCount = 0;
+        uint currentIndex = 0;
+
+        for (uint256 index = 0; index < TotalItemCount ; index++) {
+            if (_nftItems[index+1].seller == msg.sender) {
+                itemCount++;
+            }
+        }
+        NFTItem[] memory userNFT = new NFTItem[](itemCount);
+
+        for (uint256 index = 0; index < TotalItemCount; index++) {
+            if (_nftItems[index+1].seller == msg.sender) {
+                uint CurrentID = index +1;
+                NFTItem memory Currentitem = _nftItems[CurrentID];
+                userNFT[currentIndex] = Currentitem;
+                currentIndex++;
+            }
+        }
+        return userNFT;    
     }
 
 }
