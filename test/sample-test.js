@@ -64,6 +64,6 @@ describe("NFT", function () {
       }
       return Item;
     }));
-    console.log("unsoldItems:", unsoldItems);
+    console.log("UnsoldItems:", unsoldItems);
   });
 });

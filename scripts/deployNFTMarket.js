@@ -1,13 +1,14 @@
+//Deploy the NFT MArket contract
 const hre = require("hardhat");
 
 async function main() {
   // We get the contract to deploy
-  const NFT = await hre.ethers.getContractFactory("IdeaUsher");
-  const nft = await NFT.deploy();
+  const NFTMarket = await hre.ethers.getContractFactory("NFTMarket");
+  const nftmarket = await NFTMarket.deploy();
 
-  await nft.deployed();
+  await nftmarket.deployed();
 
-  console.log("NFT deployed to:", nft.address);
+  console.log("NFT deployed to:", nftmarket.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
