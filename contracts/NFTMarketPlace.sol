@@ -30,7 +30,6 @@ contract NFTMarket is ReentrancyGuard {
 
     mapping(uint256 => NFTItem) private _nftItems;
 
-    //TODO: Add the event for the NFT item created
     event NFTItemCreated(uint256 indexed Itemid, address indexed nftContract, uint256 indexed nftTokenId, address seller,address owner ,uint256 price, bool isSold);
 
     uint256 listingPrice = 0.01 ether;
