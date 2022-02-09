@@ -51,6 +51,7 @@ describe("NFT", function () {
     await market
       .connect(addr1)
       .createMarketSale(nftContractAddress, 1, { value: AuctionPrice });
+    
     //Query for and return all unsold Items
     const unsoldItems = await market.getUnsoldItems();
     const unsoldItems = await unsoldItems.Promise.all(unsoldItems.map(async (item) => {

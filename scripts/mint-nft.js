@@ -7,9 +7,15 @@ const PRIVATE_KEY = process.env.PRIVATE_KEY;
 const { createAlchemyWeb3 } = require('@alch/alchemy-web3')
 const web3 = createAlchemyWeb3(API_URL);
 
+//Calling the NFT contract
 const contract = require('../artifacts/contracts/NFT.sol/IdeaUsher.json');
 const ContractAddress = "0xb5db0f2e712A0027e6E6144B954573b613188583";
 const NFTContract = new web3.eth.Contract(contract.abi, ContractAddress);
+
+//Calling the NFT Market contract
+const contractNFTMarket = require('../artifacts/contracts/NFTMarket.sol/NFTMarket.json');
+const ContractAddressNFTMarket = "0xeeF7997972Ed795f9ABC59Ee6909d2045D62702B";
+const NFTMarketContract = new web3.eth.Contract(contractNFTMarket.abi, ContractAddressNFTMarket);
 
 async function mintNFT(tokenURI) {    
     // To get the Latest Nonce
@@ -47,3 +53,4 @@ async function mintNFT(tokenURI) {
 mintNFT(
   "https://gateway.pinata.cloud/ipfs/QmY6FPqCf1r6kqPL83Fw25ayyCugiH95qb8KFNT4PEH9qY"
 );
+
