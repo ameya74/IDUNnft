@@ -11,10 +11,29 @@ contract IdeaUsher is ERC721URIStorage, Ownable {
     Counters.Counter private _tokenIds;
 
     constructor() ERC721("IdeaUsher", "IDUN") {}
+
+    mapping(address => bool) whitelistAddresses;
+
+    modifier isWhitelisted(address _addr) {
+        require(whitelistAddresses[_addr], "Address is not whitelisted"); 
+        _;
+    }
+
+    //Function to add address to whitelist
+    function addUser(address _addressToWhitelist) public onlyOwner {
+      whitelistAddresses[_addressToWhitelist] = true;
+    }
+
+    //Function to verify address whether it's on the whitelist
+    function verifyUser(address _whitelistedAddress) public view returns(bool) {
+      bool userIsWhitelisted = whitelistAddresses[_whitelistedAddress];
+      return userIsWhitelisted;
+    }
+
     
     /// @dev string memory tokenURI is a string that should resolve to a JSON document that describes the NFT's metadata.    
     /// @return Id of the new NFT minted.    
-    function mintNFT(address recipient, string memory tokenURI) public onlyOwner returns (uint256) {
+    function mintNFT(address recipient, string memory tokenURI) public isWhitelisted(msg.sender) returns (uint256) {
         _tokenIds.increment();
 
         uint256 newItemId = _tokenIds.current();
@@ -23,4 +42,5 @@ contract IdeaUsher is ERC721URIStorage, Ownable {
 
         return newItemId;
     }
+
 }
